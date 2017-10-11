@@ -3,6 +3,7 @@ package com.vedmitryapps.news.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +13,8 @@ import android.view.ViewGroup;
 import com.vedmitryapps.news.R;
 import com.vedmitryapps.news.model.News;
 import com.vedmitryapps.news.model.api.ApiFactory;
-import com.vedmitryapps.news.view.adapters.RecyclerViewAdapter;
+import com.vedmitryapps.news.view.adapters.ItemDecoration;
+import com.vedmitryapps.news.view.adapters.MainRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +30,8 @@ public class StoriesFragment extends Fragment {
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    RecyclerViewAdapter recyclerViewAdapter;
-
+    MainRecyclerAdapter mainRecyclerAdapter;
+    private ViewPager viewPager;
     private List<News> news;
 
     @Nullable
@@ -39,6 +41,11 @@ public class StoriesFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         news = new ArrayList<>();
+
+/*        viewPager = view.findViewById(R.id.topNewsViewPager);
+        viewPager.setAdapter(new TopNewsPagerAdapter(getContext(), news));
+        TabLayout tabLayout = view.findViewById(R.id.topNewsTabLayout);
+        tabLayout.setupWithViewPager(viewPager, true);*/
 
         initRecyclerView();
         loadNews();
@@ -50,7 +57,8 @@ public class StoriesFragment extends Fragment {
         ApiFactory.getService().getNews().enqueue(new Callback<List<News>>() {
             @Override
             public void onResponse(Call<List<News>> call, Response<List<News>> response) {
-                recyclerViewAdapter.update(response.body());
+                mainRecyclerAdapter.update(response.body());
+               // ((TopNewsPagerAdapter)viewPager.getAdapter()).update(response.body());
             }
 
             @Override
@@ -61,10 +69,11 @@ public class StoriesFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        recyclerViewAdapter = new RecyclerViewAdapter(getContext(), news);
+        mainRecyclerAdapter = new MainRecyclerAdapter(getContext(), news);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.setAdapter(mainRecyclerAdapter);
+        recyclerView.addItemDecoration(new ItemDecoration());
     }
 
 }
