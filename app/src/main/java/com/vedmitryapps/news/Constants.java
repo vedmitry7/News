@@ -10,8 +10,4 @@ public class Constants {
 
     public static final int TOP_NEWS_PAGER_HEIGHT = 220;
 
-
-
-
-
 }
