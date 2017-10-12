@@ -1,7 +1,7 @@
 package com.vedmitryapps.news.model.api;
 
 
-import com.vedmitryapps.news.model.News;
+import com.vedmitryapps.news.model.objects.News;
 
 import java.util.List;
 

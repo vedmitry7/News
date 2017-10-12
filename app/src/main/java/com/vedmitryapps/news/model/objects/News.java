@@ -1,4 +1,4 @@
-package com.vedmitryapps.news.model;
+package com.vedmitryapps.news.model.objects;
 
 
 import com.google.gson.annotations.Expose;
@@ -48,7 +48,7 @@ public class News {
     @SerializedName("removed")
     @Expose
     private Boolean removed;
-    @SerializedName("top")
+    @SerializedName("top_lable_shape")
     @Expose
     private Boolean top;
     @SerializedName("previewId")

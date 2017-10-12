@@ -2,6 +2,7 @@ package com.vedmitryapps.news.view.adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.vedmitryapps.news.Constants;
 import com.vedmitryapps.news.R;
-import com.vedmitryapps.news.model.News;
+import com.vedmitryapps.news.model.objects.News;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,16 +27,17 @@ public class TopNewsPagerAdapter extends PagerAdapter {
 
     private Context context;
     private List<News> news;
+    private int heightPixels;
+    private int widthPixels;
 
     public TopNewsPagerAdapter(Context context, List<News> news) {
         this.context = context;
         this.news = news;
-    }
 
-
-    public void update(List<News> news){
-        this.news = news;
-        notifyDataSetChanged();
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float logicalDensity = displayMetrics.density;
+        heightPixels = (int) Math.ceil(Constants.TOP_NEWS_PAGER_HEIGHT * logicalDensity);
+        widthPixels = displayMetrics.widthPixels;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class TopNewsPagerAdapter extends PagerAdapter {
                 .with(context)
                 .load(news.get(position).getCover())
                 .centerCrop()
-                .override(1080, 1080/2)
+                .override(widthPixels, heightPixels)
                 .into(imageView);
 
         textView.setText(news.get(position).getName());
@@ -111,19 +113,18 @@ public class TopNewsPagerAdapter extends PagerAdapter {
                 TimeUnit.MINUTES.toMillis(1),
                 TimeUnit.SECONDS.toMillis(1) );
         List<String> timesString = Arrays.asList(context.getResources().getStringArray(R.array.periods));
-        //List<String> timesString = Arrays.asList("year","month","day","hour","minute","second");
 
         StringBuffer res = new StringBuffer();
         for(int i = 0; i < times.size(); i++) {
             Long current = times.get(i);
             long temp = duration/current;
             if(temp > 0) {
-                res.append(temp).append(" ").append(timesString.get(i) ).append(temp != 1 ? "s" : "").append(" ago");
+                res.append(temp).append(" ").append(timesString.get(i) ).append(temp != 1 ? "s" : "").append(" " + context.getString(R.string.ago));
                 break;
             }
         }
         if("".equals(res.toString()))
-            return " - 0 seconds ago";
+            return " " + context.getString(R.string.zero_second_ago);
         else
             return " - " + res.toString();
     }

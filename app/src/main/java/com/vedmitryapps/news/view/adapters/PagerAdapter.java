@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.vedmitryapps.news.Constants;
 import com.vedmitryapps.news.view.fragments.StoriesFragment;
 
 
@@ -35,16 +36,12 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "STORIES";
+                return Constants.STORIES;
             case 1:
-                return "VIDEO";
+                return Constants.VIDEO;
             case 2:
-                return "FAVOURITES";
+                return Constants.FAVOURITES;
         }
         return null;
     }
-
-
-
-
 }

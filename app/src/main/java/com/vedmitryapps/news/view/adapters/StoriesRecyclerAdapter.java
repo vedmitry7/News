@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.vedmitryapps.news.Constants;
 import com.vedmitryapps.news.R;
-import com.vedmitryapps.news.model.News;
+import com.vedmitryapps.news.model.objects.News;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,59 +30,49 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder> {
+public class StoriesRecyclerAdapter extends RecyclerView.Adapter<StoriesRecyclerAdapter.ViewHolder> {
 
     private DisplayMetrics displayMetrics;
     private List<News> news;
     private Context context;
 
-    public MainRecyclerAdapter(Context context, List<News> news) {
+    public StoriesRecyclerAdapter(Context context, List<News> news) {
         this.context = context;
         this.news = news;
         displayMetrics = context.getResources().getDisplayMetrics();
-
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         if(viewType == 2){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main_recycler_view_news, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_stories_recycler_view_news, parent, false);
         }
         if (viewType == 1){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main_recycler_view_top_news_pager, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_stories_recycler_view_top_news_pager, parent, false);
         }
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-/*      double w = news.get(position).getWidth();
-        double h = news.get(position).getHeight();   */
 
         position = position -1;
 
         if(holder.getItemViewType()== 1){
             holder.viewPager.setAdapter(new TopNewsPagerAdapter(context, news));
             holder.tabLayout.setupWithViewPager(holder.viewPager, true);
-
         }
 
         if(holder.getItemViewType() == 2) {
 
-            double w = 1080;
-            double h = 1080;
-            double k = w / h;
-
             Glide
                     .with(context)
                     .load(news.get(position).getCover())
-                    //.override(displayMetrics.widthPixels, (int) (displayMetrics.widthPixels/k))
                     .into(holder.imageView);
 
             holder.description.setText(news.get(position).getName());
             holder.source.setText(siteName(news.get(position).getLink()));
-
             holder.date.setText(toDuration(news.get(position).getCreatedAt()));
         }
     }
@@ -168,19 +158,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 TimeUnit.MINUTES.toMillis(1),
                 TimeUnit.SECONDS.toMillis(1) );
         List<String> timesString = Arrays.asList(context.getResources().getStringArray(R.array.periods));
-        //List<String> timesString = Arrays.asList("year","month","day","hour","minute","second");
 
         StringBuffer res = new StringBuffer();
         for(int i = 0; i < times.size(); i++) {
             Long current = times.get(i);
             long temp = duration/current;
             if(temp > 0) {
-                res.append(temp).append(" ").append(timesString.get(i) ).append(temp != 1 ? "s" : "").append(" ago");
+                res.append(temp).append(" ").append(timesString.get(i) ).append(temp != 1 ? "s" : "").append(" " + context.getString(R.string.ago));
                 break;
             }
         }
         if("".equals(res.toString()))
-            return " - 0 seconds ago";
+            return " " + context.getString(R.string.zero_second_ago);
         else
             return " - " + res.toString();
     }

@@ -1,6 +1,8 @@
 package com.vedmitryapps.news.model.api;
 
 
+import com.vedmitryapps.news.Constants;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -11,7 +13,7 @@ public class ApiFactory {
     public static NewsService getService(){
         if(service == null) {
             Retrofit builder = new Retrofit.Builder()
-                    .baseUrl("http://owledge.ru")
+                    .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             service = builder.create(NewsService.class);

@@ -5,4 +5,5 @@
     <color name="colorAccent">#00aff0</color>
     <color name="colorRecyclerBackground">#ececec</color>
     <color name="colorImageForeground">#66000000</color>
+    <color name="colorGray">#636363</color>
 </resources>

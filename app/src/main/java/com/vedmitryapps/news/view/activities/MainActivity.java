@@ -2,8 +2,6 @@ package com.vedmitryapps.news.view.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
@@ -45,12 +43,11 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -58,11 +55,6 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-       /* if(!isNetworkAvailable(this)){
-            Snackbar.make(coordinatorLayout, "Network is not available", Snackbar.LENGTH_LONG).show();
-            viewPager.setVisibility(View.GONE);
-        }*/
     }
 
     @Override
@@ -91,23 +83,5 @@ public class MainActivity extends AppCompatActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
 
-    }
-
-    public static boolean isNetworkAvailable(Context context) {
-        int[] networkTypes = {ConnectivityManager.TYPE_MOBILE,
-                ConnectivityManager.TYPE_WIFI};
-        try {
-            ConnectivityManager connectivityManager =
-                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            for (int networkType : networkTypes) {
-                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-                if (activeNetworkInfo != null &&
-                        activeNetworkInfo.getType() == networkType)
-                    return true;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return false;
     }
 }

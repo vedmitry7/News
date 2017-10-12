@@ -3,22 +3,24 @@ package com.vedmitryapps.news.view.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.widget.ProgressBar;
 
 import com.vedmitryapps.news.R;
-import com.vedmitryapps.news.model.News;
+import com.vedmitryapps.news.model.objects.News;
 import com.vedmitryapps.news.model.api.ApiFactory;
-import com.vedmitryapps.news.view.adapters.ItemDecoration;
-import com.vedmitryapps.news.view.adapters.MainRecyclerAdapter;
+import com.vedmitryapps.news.view.ItemDecoration;
+import com.vedmitryapps.news.view.adapters.StoriesRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindAnim;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -29,9 +31,13 @@ public class StoriesFragment extends Fragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
-    MainRecyclerAdapter mainRecyclerAdapter;
-    private ViewPager viewPager;
+    @BindAnim(R.anim.animation_in)
+    Animation animIn;
+
+    private StoriesRecyclerAdapter storiesRecyclerAdapter;
     private List<News> news;
 
     @Nullable
@@ -41,11 +47,6 @@ public class StoriesFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         news = new ArrayList<>();
-
-/*        viewPager = view.findViewById(R.id.topNewsViewPager);
-        viewPager.setAdapter(new TopNewsPagerAdapter(getContext(), news));
-        TabLayout tabLayout = view.findViewById(R.id.topNewsTabLayout);
-        tabLayout.setupWithViewPager(viewPager, true);*/
 
         initRecyclerView();
         loadNews();
@@ -57,8 +58,10 @@ public class StoriesFragment extends Fragment {
         ApiFactory.getService().getNews().enqueue(new Callback<List<News>>() {
             @Override
             public void onResponse(Call<List<News>> call, Response<List<News>> response) {
-                mainRecyclerAdapter.update(response.body());
-               // ((TopNewsPagerAdapter)viewPager.getAdapter()).update(response.body());
+                if(response != null)
+                storiesRecyclerAdapter.update(response.body());
+                recyclerView.startAnimation(animIn);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -69,10 +72,10 @@ public class StoriesFragment extends Fragment {
     }
 
     private void initRecyclerView() {
-        mainRecyclerAdapter = new MainRecyclerAdapter(getContext(), news);
+        storiesRecyclerAdapter = new StoriesRecyclerAdapter(getContext(), news);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(mainRecyclerAdapter);
+        recyclerView.setAdapter(storiesRecyclerAdapter);
         recyclerView.addItemDecoration(new ItemDecoration());
     }
 

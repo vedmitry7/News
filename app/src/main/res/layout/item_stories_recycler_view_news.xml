@@ -29,7 +29,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/margin_10dp"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/largeText"
+            android:textSize="@dimen/large_text"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -43,7 +43,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin">
 
             <TextView
-                android:textSize="@dimen/smallTextSize"
+                android:textSize="@dimen/small_text_size"
                 android:id="@+id/source"
                 android:textColorLink="@color/colorAccent"
                 android:autoLink="web"
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_10dp"
-                android:textSize="@dimen/smallTextSize" />
+                android:textSize="@dimen/small_text_size" />
         </LinearLayout>
 
     </RelativeLayout>
